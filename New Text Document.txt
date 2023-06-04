@@ -1,0 +1,131 @@
+import java.sql.;
+
+class Student {
+    private String id;
+    private String name;
+    private int age;
+    private String department;
+
+    public Student(String id, String name, int age, String department) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.department = department;
+    }
+
+     Getters and setters
+
+    public String toString() {
+        return ID  + id + , Name  + name + , Age  + age + , Department  + department;
+    }
+}
+
+class StudentManagementSystem {
+    private Connection connection;
+
+    public StudentManagementSystem() {
+        try {
+             Connect to the database
+            connection = DriverManager.getConnection(jdbcmysqllocalhoststudent_management_system, username, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addStudent(Student student) {
+        try {
+             Prepare the SQL statement
+            PreparedStatement statement = connection.prepareStatement(INSERT INTO students VALUES (, , , ));
+            statement.setString(1, student.getId());
+            statement.setString(2, student.getName());
+            statement.setInt(3, student.getAge());
+            statement.setString(4, student.getDepartment());
+
+             Execute the statement
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void displayStudents() {
+        try {
+             Create the SQL statement
+            Statement statement = connection.createStatement();
+
+             Execute the statement and retrieve the result set
+            ResultSet resultSet = statement.executeQuery(SELECT  FROM students);
+
+             Iterate over the result set and display the students
+            while (resultSet.next()) {
+                String id = resultSet.getString(id);
+                String name = resultSet.getString(name);
+                int age = resultSet.getInt(age);
+                String department = resultSet.getString(department);
+
+                Student student = new Student(id, name, age, department);
+                System.out.println(student);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Student searchStudent(String id) {
+        try {
+             Prepare the SQL statement
+            PreparedStatement statement = connection.prepareStatement(SELECT  FROM students WHERE id = );
+            statement.setString(1, id);
+
+             Execute the statement and retrieve the result set
+            ResultSet resultSet = statement.executeQuery();
+
+             If a student is found, return the student object
+            if (resultSet.next()) {
+                String name = resultSet.getString(name);
+                int age = resultSet.getInt(age);
+                String department = resultSet.getString(department);
+
+                return new Student(id, name, age, department);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;  Student not found
+    }
+
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        StudentManagementSystem system = new StudentManagementSystem();
+
+         Usage example
+        Student student1 = new Student(1, John Doe, 20, Computer Science);
+        system.addStudent(student1);
+
+        Student student2 = new Student(2, Jane Smith, 21, Electrical Engineering);
+        system.addStudent(student2);
+
+        System.out.println(Student List);
+        system.displayStudents();
+
+        String searchId = 1;
+        Student foundStudent = system.searchStudent(searchId);
+        if (foundStudent != null) {
+            System.out.println(Student found  + foundStudent);
+        } else {
+            System.out.println(Student not found.);
+        }
+
+        system.closeConnection();
+    }
+}
